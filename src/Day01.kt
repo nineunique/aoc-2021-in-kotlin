@@ -31,8 +31,4 @@ fun main() {
     // answer
     println("part1: ${part1(input)}")
     println("part2: ${part2(input)}")
-
-    // check regression
-    check(part1(input) == readInput("Day01_part1_answer").first().toInt())
-    check(part2(input) == readInput("Day01_part2_answer").first().toInt())
 }
