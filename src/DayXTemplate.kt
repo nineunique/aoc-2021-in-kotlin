@@ -13,8 +13,4 @@ fun main() {
     val input = readInput(day)
     println(part1(input))
     println(part2(input))
-
-    // check regression
-    check(part1(input) == readInput("${day}_part1_answer").first().toInt())
-    check(part2(input) == readInput("${day}_part2_answer").first().toInt())
 }
