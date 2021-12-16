@@ -22,44 +22,58 @@ fun main() {
     }
 
     fun part2(input: List<String>): Int {
-        val zero = Regex("""^[cagedb]{6}$""")
-        val one = Regex("""^[ab]{2}$""")
-        val two = Regex("""^[gcdfa]{5}$""")
-        val three = Regex("""^[fbcad]{5}$""")
-        val four = Regex("""^[bcdf]{4}$""")
-        val five = Regex("""^[cdfbe]{5}$""")
-        val six = Regex("""^[cdfgeb]{6}$""")
-        val seven = Regex("""^[dab]{3}$""")
-        val eight = Regex("""^[acedgfb]{7}$""")
-        val nine = Regex("""^[cefabd]{6}$""")
-        return input.map {
-            it.substringAfterLast(" | ")
-        }.sumOf { s ->
-            s.split(space).map {
-                if (it.matches(zero)) {
-                    "0"
-                } else if (it.matches(one)) {
-                    "1"
-                } else if (it.matches(two)) {
-                    "2"
-                } else if (it.matches(three)) {
-                    "3"
-                } else if (it.matches(four)) {
-                    "4"
-                } else if (it.matches(five)) {
-                    "5"
-                } else if (it.matches(six)) {
-                    "6"
-                } else if (it.matches(seven)) {
-                    "7"
-                } else if (it.matches(eight)) {
-                    "8"
-                } else if (it.matches(nine)) {
-                    "9"
+        return input.sumOf { line ->
+            val s = line.split(" | ")
+            val left = s[0]
+            val right = s[1]
+
+            val signals = left.split(space)
+            val digitMap = mutableMapOf<Int, String>()
+            // 1, 4, 7, 8
+            signals.forEach {
+                when (it.length) {
+                    2 -> digitMap.put(1, it)
+                    3 -> digitMap.put(7, it)
+                    4 -> digitMap.put(4, it)
+                    7 -> digitMap.put(8, it)
+                }
+            }
+
+            // 0, 6, 9
+            signals.filter { it.length == 6 }.map {
+                val containsOne = it.toList().containsAll(digitMap.getOrDefault(1, "").toList())
+                val containsFour = it.toList().containsAll(digitMap.getOrDefault(4, "").toList())
+                if (containsOne && containsFour) {
+                    digitMap.put(9, it)
+                } else if (containsOne && !containsFour) {
+                    digitMap.put(0, it)
+                } else if (!containsOne && !containsFour) {
+                    digitMap.put(6, it)
                 } else {
                     throw Exception(it)
                 }
-            }.joinToString().toInt()
+            }
+
+            // 2, 3, 5
+            signals.filter { it.length == 5 }.map {
+                val containsOne = it.toList().containsAll(digitMap.getOrDefault(1, "").toList())
+                val containsFive = digitMap.getOrDefault(6, "").toList().containsAll(
+                    it.toList()
+                )
+
+                if (containsOne) {
+                    digitMap.put(3, it)
+                } else if (containsFive) {
+                    digitMap.put(5, it)
+                } else {
+                    digitMap.put(2, it)
+                }
+            }
+
+            val converted = digitMap.map { Regex("^[${it.value}]{${it.value.length}}$") to it.key.toString() }.toMap()
+            right.split(space).map { signal ->
+                converted.entries.find { it.key.matches(signal) }?.value
+            }.joinToString("").toInt()
         }
     }
 
