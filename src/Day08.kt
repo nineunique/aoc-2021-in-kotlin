@@ -36,30 +36,40 @@ fun main() {
             it.substringAfterLast(" | ")
         }.sumOf { s ->
             s.split(space).map {
-                if (it.matches(zero)) {
-                    "0"
-                } else if (it.matches(one)) {
-                    "1"
-                } else if (it.matches(two)) {
-                    "2"
-                } else if (it.matches(three)) {
-                    "3"
-                } else if (it.matches(four)) {
-                    "4"
-                } else if (it.matches(five)) {
-                    "5"
-                } else if (it.matches(six)) {
-                    "6"
-                } else if (it.matches(seven)) {
-                    "7"
-                } else if (it.matches(eight)) {
-                    "8"
-                } else if (it.matches(nine)) {
-                    "9"
+                if (it.length == 2) {
+                    1
+                } else if (it.length == 4) {
+                    4
+                } else if (it.length == 3) {
+                    7
+                } else if (it.length == 7) {
+                    8
                 } else {
-                    throw Exception(it)
+                    if (it.matches(zero)) {
+                        "0"
+                    } else if (it.matches(one)) {
+                        "1"
+                    } else if (it.matches(two)) {
+                        "2"
+                    } else if (it.matches(three)) {
+                        "3"
+                    } else if (it.matches(four)) {
+                        "4"
+                    } else if (it.matches(five)) {
+                        "5"
+                    } else if (it.matches(six)) {
+                        "6"
+                    } else if (it.matches(seven)) {
+                        "7"
+                    } else if (it.matches(eight)) {
+                        "8"
+                    } else if (it.matches(nine)) {
+                        "9"
+                    } else {
+                        throw Exception(it)
+                    }
                 }
-            }.joinToString().toInt()
+            }.joinToString("").toInt().also { println(it) }
         }
     }
 
